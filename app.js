@@ -1,7 +1,15 @@
 const express = require('express');
-const exphbs  = require('express-handlebars');
+const exphbs = require('express-handlebars');
+const mongoose = require('mongoose');
 
 const app = express();
+
+// Connect to mongoose
+mongoose.connect(
+  'mongodb://localhost/event-manager-dev'
+)
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.log(err));
 
 // Handlebars Middleware
 app.engine('handlebars', exphbs({
