@@ -5,6 +5,8 @@ const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
+const flash = require('connect-flash');
+const session = require('express-session');
 
 const app = express();
 
@@ -30,11 +32,28 @@ app.engine('handlebars', exphbs({
 app.set('view engine', 'handlebars');
 
 // Body parser middleware
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Method override middleware
 app.use(methodOverride('_method'));
+
+// Express Session Middleware
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true,
+}));
+
+// Express Flash Middleware
+app.use(flash());
+
+// Global Variables
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  next();
+});
 
 // Index Route
 app.get('/', (req, res) => {
@@ -108,6 +127,7 @@ app.post('/events', (req, res) => {
     new Event(newEvent)
       .save()
       .then(event => {
+        req.flash('success_msg', 'Event Added');
         res.redirect('/events');
       });
   }
@@ -127,6 +147,7 @@ app.put('/events/:id', (req, res) => {
     event
       .save()
       .then(event => {
+        req.flash('success_msg', 'Event Updated');
         res.redirect('/events');
       });
   });
@@ -138,6 +159,7 @@ app.delete('/events/:id', (req, res) => {
     _id: req.params.id
   })
   .then(() => {
+    req.flash('success_msg', 'Event Removed');
     res.redirect('/events');
   });
 });
