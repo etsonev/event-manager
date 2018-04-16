@@ -1,0 +1,5 @@
+- Download the zip folder from the repository
+- You need to have nodejs installed(which includes npm) https://nodejs.org/en/
+- Navigate in your shell to the folder with the downloaded zip and unzip it.Then cd into event-manager-master.
+- Run npm install and after that npm start in your shell.
+- Open localhost:5000 in your browser.
