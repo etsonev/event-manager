@@ -70,6 +70,24 @@ app.get('/events', (req, res) => {
       startDateAndTime: 'desc'
     })
     .then(events => {
+      events.forEach(event => {
+        let startHours = new Date(event.startDateAndTime).getHours();
+        let startMinutes = new Date(event.startDateAndTime).getMinutes();
+        let startSeconds = new Date(event.startDateAndTime).getSeconds();
+
+        let endHours = new Date(event.endDateAndTime).getHours();
+        let endMinutes = new Date(event.endDateAndTime).getMinutes();
+        let endSeconds = new Date(event.endDateAndTime).getSeconds();
+
+        const startDateObj = formatTime(startHours, startMinutes, startSeconds);
+        const endDateObj = formatTime(endHours, endMinutes, endSeconds);
+        
+        event.formattedStartDate = `${new Date(event.startDateAndTime).toDateString()} 
+        ${startDateObj.hours}:${startDateObj.minutes}:${startDateObj.seconds}`;
+        event.formattedEndDate = `${new Date(event.endDateAndTime).toDateString()} 
+        ${endDateObj.hours}:${endDateObj.minutes}:${endDateObj.seconds}`;
+      });
+      
       res.render('events/index', {
         events: events
       });
@@ -169,3 +187,11 @@ const port = 5000;
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
+
+const formatTime = (hours, minutes, seconds) => {
+  return {
+    hours: hours < 10? `0${hours}` : hours,
+    minutes: minutes < 10? `0${minutes}` : minutes,
+    seconds: seconds < 10? `0${seconds}` : seconds
+  };
+};
