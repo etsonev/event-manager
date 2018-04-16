@@ -17,7 +17,7 @@ const events = require('./routes/events');
 const db = require('./config/database');
 
 // Connect to mongoose
-mongoose.connect(db.mongoURI)
+mongoose.connect('mongodb://test:test@ds047504.mlab.com:47504/event-manager-prod')
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));
 
